@@ -12,6 +12,7 @@ import (
 	"github.com/samalba/dockerclient"
 	"github.com/shipyard/shipyard"
 	"github.com/shipyard/shipyard/controller/mock_test"
+	"github.com/shipyard/shipyard/dockerhub"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -499,4 +500,108 @@ func TestApiGetEngine(t *testing.T) {
 	assert.NotEqual(t, engine.ID, nil, "expected engine; received nil")
 
 	assert.Equal(t, engine.ID, mock_test.TestEngine.ID, fmt.Sprintf("expected ID %s; got %s", mock_test.TestEngine.ID, engine.ID))
+}
+
+func TestApiRemoveEngine(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	transport := &http.Transport{}
+	client := &http.Client{Transport: transport}
+
+	ts := httptest.NewServer(http.HandlerFunc(api.removeEngine))
+	defer ts.Close()
+
+	req, err := http.NewRequest("DELETE", ts.URL, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 204, "expected response code 204")
+}
+
+func TestApiGetSerivceKeys(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ts := httptest.NewServer(http.HandlerFunc(api.serviceKeys))
+	defer ts.Close()
+
+	res, err := http.Get(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 200, "expected response code 200")
+	keys := []*shipyard.ServiceKey{}
+
+	if err := json.NewDecoder(res.Body).Decode(&keys); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.NotEqual(t, len(keys), 0, "expected keys; received none")
+}
+
+func TestApiRemoveServiceKey(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	transport := &http.Transport{}
+	client := &http.Client{Transport: transport}
+
+	ts := httptest.NewServer(http.HandlerFunc(api.removeServiceKey))
+	defer ts.Close()
+
+	data := []byte(`{"key": "test-key"}`)
+
+	req, err := http.NewRequest("DELETE", ts.URL, bytes.NewBuffer(data))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	res, err := client.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 204, "expected response code 204")
+}
+
+func TestApiGetWebhookKeys(t *testing.T) {
+	api, err := getTestApi()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ts := httptest.NewServer(http.HandlerFunc(api.webhookKeys))
+	defer ts.Close()
+
+	res, err := http.Get(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, res.StatusCode, 200, "expected response code 200")
+	keys := []*dockerhub.WebhookKey{}
+
+	if err := json.NewDecoder(res.Body).Decode(&keys); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.NotEqual(t, len(keys), 0, "expected keys; received none")
+
+	key := "abcdefg"
+
+	assert.Equal(t, keys[0].Key, key, "expected key %s; received %s", key, keys[0].Key)
 }

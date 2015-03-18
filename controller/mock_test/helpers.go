@@ -5,6 +5,7 @@ import (
 
 	"github.com/samalba/dockerclient"
 	"github.com/shipyard/shipyard"
+	"github.com/shipyard/shipyard/dockerhub"
 )
 
 var (
@@ -51,6 +52,15 @@ var (
 		Container: TestContainerInfo,
 		Message:   "test message",
 		Tags:      []string{"test-tag"},
+	}
+	TestServiceKey = &shipyard.ServiceKey{
+		Key:         "test-key",
+		Description: "Test Key",
+	}
+	TestWebhookKey = &dockerhub.WebhookKey{
+		ID:    "1234",
+		Image: "ehazlett/test",
+		Key:   "abcdefg",
 	}
 )
 

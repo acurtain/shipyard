@@ -89,11 +89,13 @@ func (m MockManager) PurgeEvents() error {
 }
 
 func (m MockManager) ServiceKey(key string) (*shipyard.ServiceKey, error) {
-	return nil, nil
+	return TestServiceKey, nil
 }
 
 func (m MockManager) ServiceKeys() ([]*shipyard.ServiceKey, error) {
-	return nil, nil
+	return []*shipyard.ServiceKey{
+		TestServiceKey,
+	}, nil
 }
 
 func (m MockManager) Accounts() ([]*shipyard.Account, error) {
@@ -188,7 +190,9 @@ func (m MockManager) RedeployContainers(image string) error {
 }
 
 func (m MockManager) WebhookKeys() ([]*dockerhub.WebhookKey, error) {
-	return nil, nil
+	return []*dockerhub.WebhookKey{
+		TestWebhookKey,
+	}, nil
 }
 
 func (m MockManager) NewWebhookKey(image string) (*dockerhub.WebhookKey, error) {
