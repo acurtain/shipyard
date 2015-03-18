@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/citadel/citadel"
 )
 
 const (
@@ -23,13 +21,13 @@ type (
 	}
 
 	Engine struct {
-		ID             string          `json:"id,omitempty" gorethink:"id,omitempty"`
-		SSLCertificate string          `json:"ssl_cert,omitempty" gorethink:"ssl_cert,omitempty"`
-		SSLKey         string          `json:"ssl_key,omitempty" gorethink:"ssl_key,omitempty"`
-		CACertificate  string          `json:"ca_cert,omitempty" gorethink:"ca_cert,omitempty"`
-		Engine         *citadel.Engine `json:"engine,omitempty" gorethink:"engine,omitempty"`
-		Health         *Health         `json:"health,omitempty" gorethink:"health,omitempty"`
-		DockerVersion  string          `json:"docker_version,omitempty"`
+		Addr           string  `json:"addr,omitempty" gorethink:"addr,omitempty"`
+		CACertificate  string  `json:"ca_cert,omitempty" gorethink:"ca_cert,omitempty"`
+		DockerVersion  string  `json:"docker_version,omitempty"`
+		Health         *Health `json:"health,omitempty" gorethink:"health,omitempty"`
+		ID             string  `json:"id,omitempty" gorethink:"id,omitempty"`
+		SSLCertificate string  `json:"ssl_cert,omitempty" gorethink:"ssl_cert,omitempty"`
+		SSLKey         string  `json:"ssl_key,omitempty" gorethink:"ssl_key,omitempty"`
 	}
 )
 
@@ -46,9 +44,13 @@ func (e *Engine) Certificate() (*tls.Certificate, error) {
 	return &cert, err
 }
 
+func (e *Engine) Version() (string, error) {
+	return "TODO", nil
+}
+
 func (e *Engine) Ping() (int, error) {
 	status := 0
-	addr := e.Engine.Addr
+	addr := e.Addr
 	tlsConfig := &tls.Config{}
 
 	// check for https

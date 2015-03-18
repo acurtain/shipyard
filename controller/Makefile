@@ -24,7 +24,7 @@ image: media build
 release: deps build image
 	@docker push shipyard/shipyard:$(TAG)
 
-test: clean 
-	@godep go test -v ./...
+test:
+	@godep go test -cover -v ./...
 
 .PHONY: all deps build clean media image test release

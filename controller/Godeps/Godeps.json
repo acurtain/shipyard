@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/shipyard/shipyard/controller",
-	"GoVersion": "go1.4",
+	"GoVersion": "go1.4.2",
 	"Deps": [
 		{
 			"ImportPath": "code.google.com/p/go.crypto/bcrypt",
@@ -29,8 +29,8 @@
 		},
 		{
 			"ImportPath": "github.com/dancannon/gorethink",
-			"Comment": "v0.5.x-9-g16b174b",
-			"Rev": "16b174b489ff37d396a9fa202536c08171717883"
+			"Comment": "v0.6.3",
+			"Rev": "a05fb9f684e7bcf6ada71ff71b8b73ba28e63a6a"
 		},
 		{
 			"ImportPath": "github.com/docker/docker/pkg/stdcopy",
@@ -55,15 +55,11 @@
 		},
 		{
 			"ImportPath": "github.com/samalba/dockerclient",
-			"Rev": "8ee44c0342d57b7daece793afb6c2bdd13220e8f"
+			"Rev": "8940662ff8c37d057ad187feaa2a50567e36cbd7"
 		},
 		{
 			"ImportPath": "golang.org/x/crypto/blowfish",
 			"Rev": "1fbbd62cfec66bd39d91e97749579579d4d3037e"
-		},
-		{
-			"ImportPath": "gopkg.in/fatih/pool.v2",
-			"Rev": "dae43b8a8a190d1f2b5908e2f6dd02481e7d59e9"
 		}
 	]
 }
