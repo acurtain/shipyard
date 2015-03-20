@@ -1,0 +1,5 @@
+{
+    "Image":"busybox",
+    "Tty":true,
+    "Cmd":["sh"]
+}

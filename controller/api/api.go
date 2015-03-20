@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -236,6 +237,7 @@ func (a *Api) inspectContainer(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(container); err != nil {
 		log.Error(err)
 	}
+	fmt.Println(container)
 }
 
 func (a *Api) addEngine(w http.ResponseWriter, r *http.Request) {

@@ -170,14 +170,15 @@ func (m DefaultManager) usageReport() {
 	if m.disableUsageInfo {
 		return
 	}
-	m.uploadUsage()
-	t := time.NewTicker(1 * time.Hour).C
-	for {
-		select {
-		case <-t:
-			go m.uploadUsage()
-		}
-	}
+	// TODO: fix usageReport
+	//m.uploadUsage()
+	//t := time.NewTicker(1 * time.Hour).C
+	//for {
+	//	select {
+	//	case <-t:
+	//		go m.uploadUsage()
+	//	}
+	//}
 }
 
 func (m DefaultManager) uploadUsage() {
