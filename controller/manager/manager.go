@@ -365,15 +365,15 @@ func (m DefaultManager) IdenticalContainers(container *dockerclient.ContainerInf
 }
 
 func (m DefaultManager) ClusterInfo() *shipyard.ClusterInfo {
-	info := m.ClusterInfo()
+	// TODO: get cpu info from swarm
 	clusterInfo := &shipyard.ClusterInfo{
-		Cpus:           info.Cpus,
-		Memory:         info.Memory,
-		ContainerCount: info.ContainerCount,
-		EngineCount:    info.EngineCount,
-		ImageCount:     info.ImageCount,
-		ReservedCpus:   info.ReservedCpus,
-		ReservedMemory: info.ReservedMemory,
+		Cpus:           0,
+		Memory:         0,
+		ContainerCount: 0,
+		EngineCount:    0,
+		ImageCount:     0,
+		ReservedCpus:   0,
+		ReservedMemory: 0,
 		Version:        m.version,
 	}
 	return clusterInfo

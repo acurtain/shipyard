@@ -1,8 +1,10 @@
 package main
 
 import (
+	"crypto/tls"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
 
 	log "github.com/Sirupsen/logrus"
@@ -10,6 +12,7 @@ import (
 	"github.com/shipyard/shipyard"
 	"github.com/shipyard/shipyard/controller/api"
 	"github.com/shipyard/shipyard/controller/manager"
+	"github.com/shipyard/shipyard/controller/utils"
 )
 
 var (
@@ -18,6 +21,10 @@ var (
 	rethinkdbAddr     string
 	rethinkdbDatabase string
 	rethinkdbAuthKey  string
+	tlsCaCert         string
+	tlsCert           string
+	tlsKey            string
+	tlsAllowInsecure  bool
 	disableUsageInfo  bool
 	showVersion       bool
 	controllerManager manager.Manager
@@ -31,6 +38,10 @@ const (
 func init() {
 	flag.StringVar(&listenAddr, "listen", ":8080", "listen address")
 	flag.StringVar(&dockerUrl, "docker", "tcp://127.0.0.1:2375", "docker url")
+	flag.StringVar(&tlsCaCert, "tls-ca-cert", "", "TLS CA certificate")
+	flag.StringVar(&tlsCert, "tls-cert", "", "TLS Certificate")
+	flag.StringVar(&tlsKey, "tls-key", "", "TLS Key")
+	flag.BoolVar(&tlsAllowInsecure, "tls-allow-insecure", false, "TLS allow insecure CA")
 	flag.StringVar(&rethinkdbAddr, "rethinkdb-addr", "127.0.0.1:28015", "rethinkdb address")
 	flag.StringVar(&rethinkdbDatabase, "rethinkdb-database", "shipyard", "rethinkdb database")
 	flag.StringVar(&rethinkdbAuthKey, "rethinkdb-auth-key", "", "rethinkdb auth key")
@@ -60,8 +71,32 @@ func main() {
 
 	log.Infof("shipyard version %s", VERSION)
 
-	// TODO: tlsconfig
-	client, err := dockerclient.NewDockerClient(dockerUrl, nil)
+	var tlsConfig *tls.Config
+	if tlsCaCert != "" && tlsCert != "" && tlsKey != "" {
+		log.Println("using tls for communication with swarm")
+		caCert, err := ioutil.ReadFile(tlsCaCert)
+		if err != nil {
+			log.Fatalf("error loading tls ca cert: %s", err)
+		}
+
+		cert, err := ioutil.ReadFile(tlsCert)
+		if err != nil {
+			log.Fatalf("error loading tls cert: %s", err)
+		}
+
+		key, err := ioutil.ReadFile(tlsKey)
+		if err != nil {
+			log.Fatalf("error loading tls key: %s", err)
+		}
+
+		cfg, err := utils.GetTLSConfig(caCert, cert, key, tlsAllowInsecure)
+		if err != nil {
+			log.Fatalf("error configuring tls: %s", err)
+		}
+		tlsConfig = cfg
+	}
+
+	client, err := dockerclient.NewDockerClient(dockerUrl, tlsConfig)
 	if err != nil {
 		log.Fatal(err)
 	}

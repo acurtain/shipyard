@@ -11,7 +11,7 @@ import (
 	"github.com/citadel/citadel"
 )
 
-func getTLSConfig(caCert, sslCert, sslKey []byte) (*tls.Config, error) {
+func GetTLSConfig(caCert, sslCert, sslKey []byte) (*tls.Config, error) {
 	// TLS config
 	var tlsConfig tls.Config
 	tlsConfig.InsecureSkipVerify = true
